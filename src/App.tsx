@@ -239,12 +239,11 @@ export default function App() {
                   <StatCard title="Appels Totaux" value={totalCalls} icon={PhoneCall} trend="+12.5%" trendUp={true} />
                   <StatCard title="Rendez-vous Pris" value={bookedCalls} icon={CalendarCheck} trend="+8.2%" trendUp={true} />
                   <StatCard title="Contacts Uniques" value={uniqueContacts} icon={Users} trend="+5.4%" trendUp={true} />
-                  <StatCard title="Durée Moyenne" value={formatDuration(avgDuration)} icon={Clock} trend="-12s" trendUp={true} />
                 </div>
 
                 {/* Charts Area */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div className="grid grid-cols-1 gap-6">
+                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <h3 className="text-lg font-semibold text-slate-900 mb-6">Volume d'appels</h3>
                     <div className="h-72">
                       <ResponsiveContainer width="100%" height="100%">
@@ -264,25 +263,6 @@ export default function App() {
                           />
                           <Area type="monotone" dataKey="calls" name="Appels totaux" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorCalls)" />
                         </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-6">Durée Moyenne (min)</h3>
-                    <div className="h-72">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={orderedWeeklyStats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                          <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
-                          <Tooltip 
-                            cursor={{ fill: '#f1f5f9' }}
-                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                          />
-                          <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                          <Bar dataKey="avgDuration" name="Durée (min)" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                        </BarChart>
                       </ResponsiveContainer>
                     </div>
                   </div>
@@ -480,10 +460,6 @@ export default function App() {
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Transcription</h4>
-                    <button className="flex items-center text-xs font-medium text-blue-600 hover:text-blue-700 bg-blue-50 px-2.5 py-1.5 rounded-md transition-colors">
-                      <PlayCircle size={14} className="mr-1.5" />
-                      Écouter l'enregistrement
-                    </button>
                   </div>
                   
                   <div className="space-y-4">
@@ -507,15 +483,6 @@ export default function App() {
                     ))}
                   </div>
                 </div>
-              </div>
-              
-              <div className="p-4 border-t border-slate-200 bg-slate-50 flex space-x-3">
-                <button className="flex-1 bg-white border border-slate-300 text-slate-700 font-medium py-2 rounded-lg text-sm hover:bg-slate-50 transition-colors shadow-sm">
-                  Rappeler
-                </button>
-                <button className="flex-1 bg-blue-600 text-white font-medium py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors shadow-sm">
-                  Marquer comme traité
-                </button>
               </div>
             </div>
           </>
