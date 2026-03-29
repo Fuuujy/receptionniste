@@ -67,6 +67,7 @@ export default function App() {
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);
   const [calls, setCalls] = useState<Call[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch initial calls
@@ -108,6 +109,21 @@ export default function App() {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}m ${s}s`;
+  };
+
+  const handleDeleteCall = async (id: string) => {
+    try {
+      const res = await fetch(`/api/calls?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setCalls(prev => prev.filter(c => c.id !== id));
+        setSelectedCall(null);
+        setDeleteConfirmId(null);
+      } else {
+        console.error("Erreur lors de la suppression de l'appel.");
+      }
+    } catch (err) {
+      console.error("Failed to delete call", err);
+    }
   };
 
   // Calculate stats
@@ -402,13 +418,19 @@ export default function App() {
           <>
             <div 
               className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-opacity"
-              onClick={() => setSelectedCall(null)}
+              onClick={() => {
+                setSelectedCall(null);
+                setDeleteConfirmId(null);
+              }}
             />
             <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300 border-l border-slate-200">
               <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
                 <h2 className="text-lg font-semibold text-slate-900">Détails de l'appel</h2>
                 <button 
-                  onClick={() => setSelectedCall(null)}
+                  onClick={() => {
+                    setSelectedCall(null);
+                    setDeleteConfirmId(null);
+                  }}
                   className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-full transition-colors"
                 >
                   <X size={20} />
@@ -483,6 +505,33 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+              </div>
+              
+              <div className="p-4 border-t border-slate-200 bg-slate-50 flex">
+                {deleteConfirmId === selectedCall.id ? (
+                  <div className="w-full flex space-x-3">
+                    <button 
+                      onClick={() => setDeleteConfirmId(null)}
+                      className="flex-1 bg-white border border-slate-300 text-slate-700 font-medium py-2 rounded-lg text-sm hover:bg-slate-50 transition-colors shadow-sm"
+                    >
+                      Annuler
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteCall(selectedCall.id)}
+                      className="flex-1 bg-rose-600 text-white font-medium py-2 rounded-lg text-sm hover:bg-rose-700 transition-colors shadow-sm"
+                    >
+                      Confirmer
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => setDeleteConfirmId(selectedCall.id)}
+                    className="w-full bg-white border border-rose-200 text-rose-600 font-medium py-2 rounded-lg text-sm hover:bg-rose-50 hover:border-rose-300 transition-colors shadow-sm flex items-center justify-center"
+                  >
+                    <X size={16} className="mr-2" />
+                    Supprimer l'appel
+                  </button>
+                )}
               </div>
             </div>
           </>
